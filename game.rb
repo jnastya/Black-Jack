@@ -2,7 +2,7 @@ require_relative 'deck'
 class Game
 
   attr_accessor :player, :dealer, :bank
-  attr_reader :status
+  attr_reader :status, :deck
 
   def initialize(player_name)
     @bid = 10
@@ -20,7 +20,7 @@ class Game
   def show_real_cards(cards)
     output = []
     cards.each do |card|
-      output << card.keys[0]
+      output << card.value + card.suit
     end
     output.join(', ')
   end
@@ -29,10 +29,10 @@ class Game
     summ = 0
     ace = false
     cards.each do |card|
-      if card.has_key?("A♣️") || card.has_key?("A♥️") || card.has_key?("A♠️") || card.has_key?("A♦️")
+      if card.value == 'A'
         ace = true
       else
-        summ += card.values[0]
+        summ += card.score
       end
     end
     if ace && summ < 11
@@ -74,6 +74,7 @@ class Game
   end
 
   def start_game
+    @deck.create_score
     @status = 0
     @bank = 0
     #@deck.shuffle_cards
