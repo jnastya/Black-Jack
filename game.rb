@@ -4,11 +4,11 @@ class Game
   attr_accessor :player, :dealer, :bank
   attr_reader :status, :deck
 
+  BID = 10
+
   def initialize(player_name)
-    @bid = 10
     @bank = 0
     @deck = Deck.new
-    @cards = @deck.shuffle_cards
     @player = Player.new(player_name)
     @dealer = Player.new('Dealer')
   end
@@ -43,11 +43,6 @@ class Game
     summ
   end
 
-  def take_card(player)
-    card = @cards.shift(1)
-    player.hand << card[0]
-  end
-
   # Statuses:
   # 1 - Player win
   # 2 - Draw
@@ -67,8 +62,8 @@ class Game
       @dealer.money += @bank
       @status = 3
     else show_current_score(@player.hand) == show_current_score(@dealer.hand)
-      @player.money += @bid
-      @dealer.money += @bid
+      @player.money += BID
+      @dealer.money += BID
       @status = 2
     end
   end
@@ -77,16 +72,17 @@ class Game
     @deck.create_score
     @status = 0
     @bank = 0
-    #@deck.shuffle_cards
-    @player.hand = @cards.shift(2)
-    @dealer.hand = @cards.shift(2)
-    @bank = @bid * 2
-    @player.money -= @bid
-    @dealer.money -= @bid
+    2.times { @player.hand << @deck.take_card }
+    2.times { @dealer.hand << @deck.take_card }
+    @bank = BID * 2
+    @player.money -= BID
+    @dealer.money -= BID
   end
 
-  def reset_deck
+  def reset
     @deck = Deck.new
-    @cards = @deck.shuffle_cards
+    @deck.shuffle_cards
+    @player.hand = []
+    @dealer.hand = []
   end
 end

@@ -46,7 +46,7 @@ class Interface
       puts "Ход переходит дилеру"
     elsif step == 2
       if @game.player.hand.length < 3
-        @game.take_card(@game.player)
+        @game.player.hand << @game.deck.take_card
         desk # update ui
       else
         puts "Число карт игрока превышено"
@@ -61,7 +61,7 @@ class Interface
     if @game.show_current_score(@game.dealer.hand) >= 17 # dealer could miss his turn
       puts "Дилер пропускает ход"
     elsif @game.show_current_score(@game.dealer.hand) < 17 # dealer could take a new card
-      @game.take_card(@game.dealer)
+      @game.dealer.hand << @game.deck.take_card
       desk
     end
     puts "Ход переходит игроку"
@@ -76,18 +76,15 @@ class Interface
       desk
       while @game.player.hand.length < 3 && @game.dealer.hand.length < 3 do
         player_turn
-        break if @open_cards
         dealer_turn
+        break if @open_cards
       end
       @game.results
       desk
       puts "Повторить (y/n)?"
       choise = gets.chomp
       break if choise == "n" || @game.player.money == 0 || @game.dealer.money == 0
-      @game.reset_deck
+      @game.reset
     end
   end
 end
-
-game = Interface.new
-game.menu
