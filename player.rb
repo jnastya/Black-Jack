@@ -29,18 +29,14 @@ class Player
 
   def get_current_score
     summ = 0
-    ace = false
+    ace_storage = []
     @hand.each do |card|
-      if card.value == 'A'
-        ace = true
-      else
-        summ += card.score
-      end
+      next ace_storage << card if card.value == 'A'
+      summ += card.score
     end
-    if ace && summ < 11
-      summ += 11
-    elsif ace
-      summ += 1
+    ace_storage.each do |ace|
+      mid_summ = ace.score.call(summ)
+      summ += mid_summ
     end
     summ
   end

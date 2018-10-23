@@ -6,10 +6,6 @@ class Interface
 
   attr_reader :status
 
-  def initialize
-    @open_cards = false
-  end
-
   def desk
     puts "_______________________________________"
     puts "| Карты дилера: #{@game.dealer.dealer_cards}                    |"
@@ -53,7 +49,7 @@ class Interface
       end
       puts "Ход переходит дилеру"
     elsif step == 3
-      @open_cards = true
+      @game.open_cards = true
     end
   end
 
@@ -77,7 +73,7 @@ class Interface
       while @game.player.hand.length < 3 && @game.dealer.hand.length < 3 do
         player_turn
         dealer_turn
-        break if @open_cards
+        break if @game.open_cards
       end
       @game.results
       desk

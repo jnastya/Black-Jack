@@ -1,7 +1,7 @@
 require_relative 'deck'
 class Game
 
-  attr_accessor :player, :dealer, :bank
+  attr_accessor :player, :dealer, :bank, :open_cards
   attr_reader :status, :deck
 
   BID = 10
@@ -11,6 +11,7 @@ class Game
     @deck = Deck.new
     @player = Player.new(player_name)
     @dealer = Player.new('Dealer')
+    @open_cards = false
   end
 
   # Statuses:
@@ -41,6 +42,7 @@ class Game
 
   def start_game
     @deck.create_score
+    @deck.shuffle_cards
     @status = 0
     @bank = 0
     2.times { @player.hand << @deck.take_card }
@@ -52,7 +54,6 @@ class Game
 
   def reset
     @deck = Deck.new
-    @deck.shuffle_cards
     @player.hand = []
     @dealer.hand = []
     @dealer.can_show_dealer_cards = false
