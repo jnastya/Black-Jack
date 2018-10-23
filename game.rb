@@ -13,55 +13,26 @@ class Game
     @dealer = Player.new('Dealer')
   end
 
-  def hide_dealer_cards(dealer_cards)
-    return '*' * dealer_cards.length
-  end
-
-  def show_real_cards(cards)
-    output = []
-    cards.each do |card|
-      output << card.value + card.suit
-    end
-    output.join(', ')
-  end
-
-  def show_current_score(cards)
-    summ = 0
-    ace = false
-    cards.each do |card|
-      if card.value == 'A'
-        ace = true
-      else
-        summ += card.score
-      end
-    end
-    if ace && summ < 11
-      summ += 11
-    elsif ace
-      summ += 1
-    end
-    summ
-  end
-
   # Statuses:
   # 1 - Player win
   # 2 - Draw
   # 3 - Dealer win
 
   def results
-    if show_current_score(@player.hand) > 21
+    @dealer.can_show_dealer_cards = true
+    if @player.get_current_score > 21
       @dealer.money += @bank
       @status = 3
-    elsif show_current_score(@dealer.hand) > 21
+    elsif @dealer.get_current_score > 21
       @player.money += @bank
       @status = 1
-    elsif show_current_score(@player.hand) > show_current_score(@dealer.hand)
+    elsif @player.get_current_score > @dealer.get_current_score
       @player.money += @bank
       @status = 1
-    elsif show_current_score(@player.hand) < show_current_score(@dealer.hand)
+    elsif @player.get_current_score < @dealer.get_current_score
       @dealer.money += @bank
       @status = 3
-    else show_current_score(@player.hand) == show_current_score(@dealer.hand)
+    else @player.get_current_score == @dealer.get_current_score
       @player.money += BID
       @dealer.money += BID
       @status = 2
@@ -84,5 +55,6 @@ class Game
     @deck.shuffle_cards
     @player.hand = []
     @dealer.hand = []
+    @dealer.can_show_dealer_cards = false
   end
 end

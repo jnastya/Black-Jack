@@ -12,10 +12,10 @@ class Interface
 
   def desk
     puts "_______________________________________"
-    puts "| Карты дилера: #{@game.status == 0 ? @game.hide_dealer_cards(@game.dealer.hand) : @game.show_real_cards(@game.dealer.hand)}                    |"
+    puts "| Карты дилера: #{@game.dealer.dealer_cards}                    |"
     puts "| Деньги дилера: #{@game.dealer.money}$             |"
     if @game.status != 0
-      puts "| Очки дилера: #{@game.show_current_score(@game.dealer.hand)}                      |"
+      puts "| Очки дилера: #{@game.dealer.get_current_score}                      |"
     end
     puts "|                                     |"
     puts "|                                     |"
@@ -30,8 +30,8 @@ class Interface
     end
     puts "|                                     |"
     puts "|                                     |"
-    puts "| Ваши карты: #{@game.show_real_cards(@game.player.hand)}                  |"
-    puts "| Ваши очки: #{@game.show_current_score(@game.player.hand)}                       |"
+    puts "| Ваши карты: #{@game.player.player_cards}                  |"
+    puts "| Ваши очки: #{@game.player.get_current_score}                       |"
     puts "| Ваши деньги: #{@game.player.money}$                    |"
     puts "|_____________________________________|"
   end
@@ -58,9 +58,9 @@ class Interface
   end
 
   def dealer_turn
-    if @game.show_current_score(@game.dealer.hand) >= 17 # dealer could miss his turn
+    if @game.dealer.get_current_score >= 17 # dealer could miss his turn
       puts "Дилер пропускает ход"
-    elsif @game.show_current_score(@game.dealer.hand) < 17 # dealer could take a new card
+    elsif @game.dealer.get_current_score < 17 # dealer could take a new card
       @game.dealer.hand << @game.deck.take_card
       desk
     end
