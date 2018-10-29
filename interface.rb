@@ -9,10 +9,10 @@ class Interface
   def desk
     puts "_______________________________________"
     puts "| Карты дилера: #{@game.dealer.dealer_cards}                    |"
-    puts "| Деньги дилера: #{@game.dealer.money}$             |"
     if @game.status != 0
       puts "| Очки дилера: #{@game.dealer.get_current_score}                      |"
     end
+    puts "| Деньги дилера: #{@game.dealer.money}$             |"
     puts "|                                     |"
     puts "|                                     |"
     if @game.status == 0
@@ -42,14 +42,14 @@ class Interface
       puts "Ход переходит дилеру"
     elsif step == 2
       if @game.player.hand.length < 3
-        @game.player.hand << @game.deck.take_card
+        @game.player_take_card
         desk # update ui
       else
         puts "Число карт игрока превышено"
       end
       puts "Ход переходит дилеру"
     elsif step == 3
-      @game.open_cards = true
+      @game.do_open_cards
     end
   end
 
@@ -57,7 +57,7 @@ class Interface
     if @game.dealer.get_current_score >= 17 # dealer could miss his turn
       puts "Дилер пропускает ход"
     elsif @game.dealer.get_current_score < 17 # dealer could take a new card
-      @game.dealer.hand << @game.deck.take_card
+      @game.dealer_take_card
       desk
     end
     puts "Ход переходит игроку"

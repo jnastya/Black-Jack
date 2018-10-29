@@ -41,8 +41,6 @@ class Game
   end
 
   def start_game
-    @deck.create_score
-    @deck.shuffle_cards
     @status = 0
     @bank = 0
     2.times { @player.hand << @deck.take_card }
@@ -57,5 +55,17 @@ class Game
     @player.hand = []
     @dealer.hand = []
     @dealer.can_show_dealer_cards = false
+  end
+
+  def player_take_card
+    @player.hand << @deck.take_card
+  end
+
+  def dealer_take_card
+    @dealer.hand << @deck.take_card
+  end
+
+  def do_open_cards
+    @open_cards = true
   end
 end

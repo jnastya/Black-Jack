@@ -18,7 +18,6 @@ class Player
     get_real_cards
   end
 
-
   def get_real_cards
     output = []
     @hand.each do |card|
@@ -35,7 +34,7 @@ class Player
       summ += card.score
     end
     ace_storage.each do |ace|
-      mid_summ = ace.score.call(summ)
+      mid_summ = ace.create_score_ace(summ)
       summ += mid_summ
     end
     summ

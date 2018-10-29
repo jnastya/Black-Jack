@@ -2,27 +2,17 @@ require_relative 'card'
 
 class Deck
 
-  attr_accessor :cards
+  attr_accessor :card
+
+  SUITS = ['♣️', '♥️', '♠️', '♦️']
+  VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 
   def initialize
-    @deck = (0..51).to_a.collect { |id| Card.new(id) }
-    @ace = Proc.new { |a| a < 11 ? 11 : 1 }
+    @deck = create_deck.shuffle!
   end
 
-  def create_score
-    @deck.each do |card|
-      if card.value =~ /10|[JQK]/
-        card.score = 10
-      elsif card.value =~ /[2-9]/
-        card.score = card.value.to_i
-      else card.value = 'A'
-        card.score = @ace
-      end
-    end
-  end
-
-  def shuffle_cards
-    @deck.shuffle!
+  def create_deck
+     SUITS.map{|suit| VALUES.map{|value| Card.new(suit, value)}}.flatten
   end
 
   def take_card
