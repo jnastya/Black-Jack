@@ -2,6 +2,9 @@ class Card
 
 attr_accessor :suit, :value, :score
 
+SUITS = ['♣️', '♥️', '♠️', '♦️']
+VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+
   def initialize(suit, value)
     @suit = suit
     @value = value
@@ -31,8 +34,8 @@ attr_accessor :suit, :value, :score
   protected
 
   def validate!
-    raise RegexpError, 'Suits are not suitable' if @suit !~ /[♣️♥️♠️♦️]/
-    raise RegexpError, 'Values are not suitable' if @value !~ /[2-9]|10|[JQKA]/
+    raise RegexpError, 'Suits are not suitable' unless SUITS.include?(@suit)
+    raise RegexpError, 'Values are not suitable' unless VALUES.include?(@value)
     true
   end
 end
