@@ -2,7 +2,7 @@ require_relative 'deck'
 class Game
 
   attr_accessor :player, :dealer, :bank, :open_cards
-  attr_reader :status, :deck
+  attr_reader :status, :deck, :message, :desk
 
   BID = 10
 
@@ -12,6 +12,43 @@ class Game
     @player = Player.new(player_name)
     @dealer = Player.new('Dealer')
     @open_cards = false
+    @message = ""
+    @desk = desk
+  end
+
+
+  def actions(step)
+    while @player.hand.length < 3 && @dealer.hand.length < 3 do
+      player_turn(step)
+      dealer_turn
+      break if @open_cards
+    end
+  end
+
+  def player_turn(step)
+    if step == 1
+      @message = "Ход переходит дилеру"
+    elsif step == 2
+      if @player.hand.length < 3
+        @player.hand << @deck.take_card
+        @desk # update ui
+      else
+        @message = "Число карт игрока превышено"
+      end
+      @message = "Ход переходит дилеру"
+    elsif step == 3
+      do_open_cards
+    end
+  end
+
+  def dealer_turn
+    if @dealer.get_current_score >= 17 # dealer could miss his turn
+      @message = "Дилер пропускает ход"
+    elsif @dealer.get_current_score < 17 # dealer could take a new card
+      @dealer.hand << @deck.take_card
+      @desk
+    end
+    @message = "Ход переходит игроку"
   end
 
   # Statuses:
@@ -55,14 +92,6 @@ class Game
     @player.hand = []
     @dealer.hand = []
     @dealer.can_show_dealer_cards = false
-  end
-
-  def player_take_card
-    @player.hand << @deck.take_card
-  end
-
-  def dealer_take_card
-    @dealer.hand << @deck.take_card
   end
 
   def do_open_cards

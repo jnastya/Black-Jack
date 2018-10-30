@@ -32,37 +32,6 @@ class Interface
     puts "|_____________________________________|"
   end
 
-  def player_turn
-    puts "Выбирете вариант:"
-    puts "1. Пропустить ход"
-    puts "2. Добавить карту"
-    puts "3. Открыть карты"
-    step = gets.to_i
-    if step == 1
-      puts "Ход переходит дилеру"
-    elsif step == 2
-      if @game.player.hand.length < 3
-        @game.player_take_card
-        desk # update ui
-      else
-        puts "Число карт игрока превышено"
-      end
-      puts "Ход переходит дилеру"
-    elsif step == 3
-      @game.do_open_cards
-    end
-  end
-
-  def dealer_turn
-    if @game.dealer.get_current_score >= 17 # dealer could miss his turn
-      puts "Дилер пропускает ход"
-    elsif @game.dealer.get_current_score < 17 # dealer could take a new card
-      @game.dealer_take_card
-      desk
-    end
-    puts "Ход переходит игроку"
-  end
-
   def menu
     puts "Введите Ваше имя"
     player_name = gets.chomp
@@ -70,11 +39,13 @@ class Interface
     loop do
       @game.start_game
       desk
-      while @game.player.hand.length < 3 && @game.dealer.hand.length < 3 do
-        player_turn
-        dealer_turn
-        break if @game.open_cards
-      end
+      puts "Выбирете вариант:"
+      puts "1. Пропустить ход"
+      puts "2. Добавить карту"
+      puts "3. Открыть карты"
+      step = gets.to_i
+      raise "Invalid input if" if step < 1 || step > 3
+      @game.actions(step)
       @game.results
       desk
       puts "Повторить (y/n)?"
